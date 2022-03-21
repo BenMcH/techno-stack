@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: techno-stack-template
+  namespace: techno-stack-template
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: techno-stack-template.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: techno-stack-template
+            port:
+              number: 3000

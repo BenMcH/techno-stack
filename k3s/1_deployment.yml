@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techno-stack-template
+  namespace: techno-stack-template
+  labels:
+    app: techno-stack-template
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: techno-stack-template
+  template:
+    metadata:
+      labels:
+        app: techno-stack-template
+    spec:
+      containers:
+      - name: techno-stack-template
+        image: localhost:5000/techno-stack-template:latest
+        imagePullPolicy: Always
+        command: ["npm"]
+        args:
+          - start

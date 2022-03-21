@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 
-const toml = require("@iarna/toml");
 const sort = require("sort-package-json");
 
 function escapeRegExp(string) {
@@ -22,9 +21,7 @@ async function main({ rootDirectory }) {
 
   const REPLACER = "techno-stack-template";
 
-  const DIR_NAME = path.basename(rootDirectory);
-  const SUFFIX = getRandomString(2);
-  const APP_NAME = DIR_NAME + "-" + SUFFIX;
+  const APP_NAME = path.basename(rootDirectory);
 
   const [readme, env, packageJson] = await Promise.all([
     fs.readFile(README_PATH, "utf-8"),
@@ -37,8 +34,23 @@ async function main({ rootDirectory }) {
     `SESSION_SECRET="${getRandomString(16)}"`
   );
 
-  const prodToml = toml.parse(prodContent);
-  prodToml.app = prodToml.app.replace(REPLACER, APP_NAME);
+  const deploymentFilePaths = [
+    'k3s/0_namespace.yml',
+    'k3s/1_deployment.yml',
+    'k3s/2_service.yml',
+    'k3s/3_ingress.yml',
+  ];
+
+  const deploymentFiles = await Promise.all(
+    deploymentFilePaths.map((filePath) => fs.readFile(path.join(rootDirectory, filePath), "utf-8"))
+  );
+
+  const newDeploymentFiles = deploymentFiles.map((file) =>
+    file.replace(
+      new RegExp(escapeRegExp(REPLACER), "g"),
+      APP_NAME
+    )
+  );
 
   const newReadme = readme.replace(
     new RegExp(escapeRegExp(REPLACER), "g"),
@@ -56,6 +68,9 @@ async function main({ rootDirectory }) {
     fs.writeFile(README_PATH, newReadme),
     fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
+    ...newDeploymentFiles.map((file, index) =>
+      fs.writeFile(path.join(rootDirectory, deploymentFilePaths[index]), file)
+    ),
   ]);
 
   console.log(
