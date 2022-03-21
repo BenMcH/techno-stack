@@ -1,6 +1,6 @@
 # Remix Techno Stack
 
-![The Remix Techno Stack](https://repository-images.githubusercontent.com/461012689/37d5bd8b-fa9c-4ab0-893c-f0a199d5012d)
+![The Remix Techno Stack](https://user-images.githubusercontent.com/1274349/159200664-d3ea18b6-ac7e-4eb9-bcb2-68d5d7fcfe30.png)
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
