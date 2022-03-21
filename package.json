@@ -30,7 +30,8 @@
   "eslintIgnore": [
     "/node_modules",
     "/build",
-    "/public/build"
+    "/public/build",
+    "/postgres-data"
   ],
   "dependencies": {
     "@node-rs/bcrypt": "^1.6.0",
